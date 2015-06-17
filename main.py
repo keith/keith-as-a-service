@@ -38,8 +38,8 @@ class GithubHook(MethodView):
             requests.patch(pull_request_link,
                            data=json.dumps(close_state),
                            auth=auth)
-        except:
-            pass
+        except Exception, e:
+            print e
 
         return "42"
 
