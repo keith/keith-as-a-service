@@ -30,7 +30,6 @@ class GithubHook(MethodView):
         comment_body = {"body": "#40 hello"}
         close_state = {"state": "closed"}
         auth = (os.environ["github_user"], os.environ["github_pass"])
-        # auth = ("keith", "dae566a8347393e59337ce6592c42e6ba7d86d5f")
 
         try:
             requests.post(comments_url,
