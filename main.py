@@ -1,5 +1,7 @@
 from flask import Flask, request
 from flask.views import MethodView
+import hashlib
+import hmac
 import json
 import os
 import requests
@@ -8,6 +10,26 @@ import sys
 
 class GithubHook(MethodView):
     def post(self):
+        try:
+            signature = request.headers["X-Hub-Signature"]
+        except Exception, e:
+            print "No hub signature %s : %s" % (request.headers,
+                                                request.get_json())
+            return "This is sketchy, I'm leaving"
+
+        try:
+            secret = os.environ["hook_secret"]
+            hash_string = hmac.new(secret.encode('utf-8'),
+                                   msg=request.data,
+                                   digestmod=hashlib.sha1).hexdigest()
+            expected_hash = "sha1=" + hash_string
+        except Exception, e:
+            print "Building expected hash failed: %s" % e
+            return "Building expected hash failed", 500
+
+        if signature != expected_hash:
+            return "Wrong hash, gtfo"
+
         request_json = request.get_json()
         pull_request = request_json.get("pull_request")
 
@@ -26,7 +48,8 @@ class GithubHook(MethodView):
         links = pull_request.get("_links")
         pull_request_link = links.get("self").get("href")
         comments_url = links.get("comments").get("href")
-        message = "#12199 (this was closed automatically, if your pull request should not be closed based on that issue, please reopen it)"
+        message = "#12199 (this was closed automatically, if your pull \
+            request should not be closed based on that issue, please reopen it)"
         comment_body = {"body": message}
         close_state = {"state": "closed"}
         auth = (os.environ["github_user"], os.environ["github_pass"])
@@ -39,7 +62,7 @@ class GithubHook(MethodView):
                            data=json.dumps(close_state),
                            auth=auth)
         except Exception, e:
-            print e
+            print "Exception: ", e
 
         return "42"
 
