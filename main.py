@@ -74,4 +74,4 @@ if __name__ == "__main__":
         print "Usage: %s <PORT>" % sys.argv[0]
         sys.exit(1)
 
-    app.run(port=sys.argv[1], host="0.0.0.0")
+    app.run(port=int(sys.argv[1]), host="0.0.0.0")
