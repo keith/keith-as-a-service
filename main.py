@@ -48,8 +48,7 @@ class GithubHook(MethodView):
         links = pull_request.get("_links")
         pull_request_link = links.get("self").get("href")
         comments_url = links.get("comments").get("href")
-        message = "#12199 (this was closed automatically, if your pull \
-            request should not be closed based on that issue, please reopen it)"
+        message = os.environ["message"]
         comment_body = {"body": message}
         close_state = {"state": "closed"}
         auth = (os.environ["github_user"], os.environ["github_pass"])
