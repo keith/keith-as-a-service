@@ -12,7 +12,11 @@ ngrok:
 serve: verify
 	python main.py $(PORT)
 
-verify: guard-hook_secret guard-github_user guard-github_pass
+verify: \
+	guard-hook_secret \
+	guard-github_user \
+	guard-github_pass \
+	guard-message
 
 guard-%:
 	@ if [ "${${*}}" == "" ]; then \

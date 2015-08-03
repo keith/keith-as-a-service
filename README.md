@@ -14,6 +14,7 @@ openssl rand -hex 32 | pbcopy
 export hook_secret=`pbpaste`
 export github_user=<USER>
 export github_pass=<PASS>
+export message="This is the close message"
 make verify # Check to make sure your env is correct
 make serve
 
@@ -31,4 +32,5 @@ openssl rand -hex 32 | pbcopy
 hook_secret=<SECRET>
 github_user=<USER>
 github_pass=<PASS>
+message=<MESSAGE>
 ```
