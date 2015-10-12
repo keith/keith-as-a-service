@@ -42,9 +42,6 @@ class GithubHook(MethodView):
         if pull_request.get("additions") < 10:
             return "You didn't add much, that's probably legit!"
 
-        if pull_request.get("changed_files") > 2:
-            return "OK what are you doing?"
-
         links = pull_request.get("_links")
         pull_request_link = links.get("self").get("href")
         comments_url = links.get("comments").get("href")
